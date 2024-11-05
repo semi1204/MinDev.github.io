@@ -1,12 +1,374 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Portfolio</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MinDev</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        body {
+            background-color: #0A0A0A;
+            color: #fff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .gradient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            opacity: 0.5;
+            pointer-events: none;
+            background: radial-gradient(circle at 50% 50%, 
+                rgba(255,255,255,0.1) 0%, 
+                rgba(255,255,255,0.05) 25%, 
+                rgba(255,255,255,0) 50%);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 6rem 2rem;
+            position: relative;
+        }
+        
+        header {
+            margin-bottom: 8rem;
+            position: relative;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #fff, #666);
+            -webkit-background-clip: text;
+            color: transparent;
+            display: inline-block;
+            position: relative;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #fff;
+            transition: width 0.3s ease;
+        }
+
+        .logo:hover::after {
+            width: 100%;
+        }
+        
+        .tagline {
+            font-size: 4.5rem;
+            line-height: 1.1;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, #fff 30%, #666);
+            -webkit-background-clip: text;
+            color: transparent;
+            transition: transform 0.3s ease;
+        }
+
+        .tagline:hover {
+            transform: translateX(20px);
+        }
+        
+        .section {
+            margin-bottom: 8rem;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .product-card {
+            background-color: #151515;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid #252525;
+            border-radius: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .product-card:hover::before {
+            transform: translateX(100%);
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: #fff;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        
+        .product-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-top: 2rem;
+        }
+        
+        .tech-badge {
+            background-color: #252525;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.9rem;
+            color: #fff;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tech-badge::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .tech-badge:hover {
+            color: #0A0A0A;
+        }
+
+        .tech-badge:hover::after {
+            opacity: 1;
+        }
+        
+        .product-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+        }
+        
+        .product-details.visible {
+            max-height: 500px;
+            opacity: 1;
+            margin-top: 3rem;
+            padding-top: 3rem;
+            border-top: 1px solid #252525;
+        }
+
+        .product-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(45deg, #fff, #666);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        
+        .key-feature {
+            font-size: 1.8rem;
+            margin: 2rem 0;
+            color: #666;
+            transform: translateX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .key-feature:hover {
+            transform: translateX(20px);
+        }
+        
+        .key-feature span {
+            color: #fff;
+            display: block;
+        }
+        
+        .scroll-text {
+            position: absolute;
+            right: -100px;
+            bottom: 40px;
+            transform: rotate(-90deg);
+            font-size: 0.9rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+        }
+        
+        .next-section {
+            font-size: 7rem;
+            font-weight: 700;
+            line-height: 1;
+            opacity: 0.1;
+            transition: opacity 0.3s ease;
+        }
+
+        .next-section:hover {
+            opacity: 0.3;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 3rem 1.5rem;
+            }
+            
+            .tagline {
+                font-size: 3rem;
+            }
+            
+            .product-title {
+                font-size: 1.5rem;
+            }
+            
+            .key-feature {
+                font-size: 1.4rem;
+            }
+            
+            .next-section {
+                font-size: 4rem;
+            }
+        }
+    </style>
 </head>
 <body>
-  <p>Hello, World!</p>
+    <div class="gradient-bg"></div>
+    <div class="container">
+        <header>
+            <div class="logo">MinDev</div>
+            <div class="tagline">Less UI.<br>More Human.</div>
+        </header>
+
+        <section class="section">
+            <div class="product-card">
+                <div class="product-title">
+                    <i class="fas fa-clock"></i>
+                    ClickRevision
+                </div>
+                <p>Rethinking the way we learn.</p>
+                <div class="tech-stack">
+                    <span class="tech-badge">Python</span>
+                    <span class="tech-badge">Dart</span>
+                    <span class="tech-badge">Swift</span>
+                    <span class="tech-badge">LLM RAG</span>
+                </div>
+                <div class="product-details">
+                    <div class="key-feature">
+                        Complexity, removed.<br>
+                        <span>Focus, restored.</span>
+                    </div>
+                    <div class="product-stats">
+                        <div class="stat">
+                            <div class="stat-number">15k+</div>
+                            <div class="stat-label">Active Users</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">98%</div>
+                            <div class="stat-label">Focus Rate</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">2x</div>
+                            <div class="stat-label">Learning Speed</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="scroll-text">Click to explore</div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="next-section">
+                Next project<br>
+                Loading...
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Intersection Observer for sections
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        document.querySelectorAll('.section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Product card click handler
+        document.querySelector('.product-card').addEventListener('click', function() {
+            const details = this.querySelector('.product-details');
+            details.classList.toggle('visible');
+        });
+
+        // Mouse move effect for gradient background
+        document.addEventListener('mousemove', (e) => {
+            const gradientBg = document.querySelector('.gradient-bg');
+            const x = e.clientX / window.innerWidth * 100;
+            const y = e.clientY / window.innerHeight * 100;
+            gradientBg.style.background = `radial-gradient(circle at ${x}% ${y}%, 
+                rgba(255,255,255,0.1) 0%, 
+                rgba(255,255,255,0.05) 25%, 
+                rgba(255,255,255,0) 50%)`;
+        });
+    </script>
 </body>
 </html>
